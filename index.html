@@ -6,14 +6,19 @@
     <iframe>
         <script>
             var cookie=true;
-            var OS="";
+            var OS="", mynav ="", myplat ="";
 
             OS = navigator.appVersion;
-            document.write(OS);
-            document.write(navigator)
-            document.write(navigator.platform)
+            mynav = navigator.platform;
+            myplat = navigator.platform;
         </script>
     </iframe>
+
+    <script>
+        document.write(OS);
+        document.write(mynav)
+        document.write(myplat)
+    </script>
 
 </body>
 </html>
