@@ -1,11 +1,126 @@
-<!DOCTYPE html>
 <html>
 <body>
-    <h1>Hello World, this is my fingerprinting website </h1>
-
+    <h1 id='he'>Hello world!</h1>
+    <div id='div1'></div>
     <script>
+        // Popular fonts to be compared
+        // Generic: Hela,Arial,Times,Times New,Courier,Courier New,Verdana,Tahoma,Georgia,Arial Black,Comic Sans MS,Garamond
+        // Mac: Avant Garde, Chalkduster, Lucida Grande, Palatino, Bookman, Century Schoolbook?
+        // Linux: Terminus Font, Ubuntu Mono
+        // Windows: Microsoft Yahei,Calibri
+        var fonts = ['Helavetica','Times', 'Bookman', 'Courier New', 'Verdana', 'Tahoma', 'Arial Black','Impact', 'Avant Garde', 'Georgia', 'Palatino', 'Garamond', 'Century Schoolbook', 'Calibri', 'Andale Mono', 'Lucida Grande','Times New Roman', 'Chalkduster', 'Ubuntu Mono','Arial', 'Courier', 'Terminus Font', 'Comic Sans MS', 'Microsoft Yahei'];
+        var fontNum = fonts.length;
+        // Create element to hold fonts being compared
+        var container = document.createElement('span');
+        // Choose two characters with different width in proportional fonts
+        container.innerHTML = Array(10).join('io');
+        container.style.cssText = [
+            'position:absolute',
+            'width:auto',
+            'font-size:60px',
+            'left:-9999px'].join(' !important;');
+        var getWidth = function(fontFamily){
+            container.style.fontFamily = fontFamily;
+            var body = document.body;
+            body.appendChild(container);
+            var width = container.clientWidth;
+            body.removeChild(container);
+            return width;
+        };
+        // Three standards to compare with
+        var monoWidth = getWidth('monospace');
+        var serifWidth = getWidth('serif');
+        var sansWidth = getWidth('sans-serif');
+
+        window.isFontInstalled = function (font) {
+            return monoWidth !== getWidth(font + ',monospace') ||
+            sansWidth !== getWidth(font + ',sans-serif') ||
+            serifWidth !== getWidth(font + ',serif');
+        };
+        var codeResult = new Array(fontNum);
+        var result, node, element, msg;
+        element = document.getElementById('div1');
+        // Compare fonts list with standards
+        for(var i = 0; i < fontNum; i++){
+            result = document.createElement('p');
+            if(isFontInstalled(fonts[i])){
+                msg = '  -OK-';
+                codeResult[i] = 1;
+            }
+            else{
+                msg = '  -MISSING-';
+                codeResult[i] = 0;
+            }
+            node = document.createTextNode(fonts[i] + msg);
+            result.appendChild(node);
+            element.appendChild(result);
+        };
+        var temp = codeResult.toString();
+        var fontId = temp.replace(/,/g, ''); // equal to replaceALL()
+        var fontList = fontId;               // Used by Zorig, I added this because I wanted to calculate hamming distances
+
+        result = document.createElement('p');
+        node = document.createTextNode(fontId);
+        result.appendChild(node);
+        element.appendChild(result);
+        //////////////////////////////////////////////////////////////////
+        function isTouchScreen(){
+            try{
+                document.createEvent('TouchEvent');
+                return true;
+            }catch(e){
+                return false;
+            }
+        }
+        if(isTouchScreen()){
+            msg = 'Has TouchScreen';
+        }else{
+            msg = 'Not TouchScreen';
+        }
+        result = document.createElement('p');
+        node = document.createTextNode(msg);
+        result.appendChild(node);
+        element.appendChild(result);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        ////////////////////////////////////////////////////////
+        // Checking the platform of the browser               //
+        // Platform: which platform the browser is compiled   //
         var OSPlat = navigator.platform;
         var OS='Unknown';
+        var linuxFonts = '0101000000100001011100';
+        var winFonts='0101111101011001001101';
+        var macFonts = '010111110110001111011010';
+        var linuxHam = 0, winHam = 0, macHam = 0, strlength=22;
+
+        // Calculating hamming distance
+        var hammingDistance = function(str1, str2) {
+            var counter=0, distance=0;
+
+            if(str1.length > str2.length) { strlength=str1.length; }
+            else { strlength = str2.length }
+            while (counter < strlength) {
+                if(str1[counter] != str2[counter]) { distance++; }
+                counter++;
+            }
+            return distance;
+        };
+
 
         if(OSPlat.indexOf('Mac') != -1) {
             OS='macOS';
@@ -20,9 +135,22 @@
             OS='Unknown';
         }
 
+        linuxHam = hammingDistance(linuxFonts,  fontList  );
+        winHam = hammingDistance(winFonts,  fontList  );
+        macHam = hammingDistance(macFonts,  fontList  );
+
+        document.write(linuxHam, winHam, macHam);
+
+        if(linuxHam < 6 && OS=='Linux') {}
+        else if(winHam < 6 && OS=='Windows') {} 
+        else if(macHam < 6 && OS=='macOS') {}
+        else if(linuxHam <= winHam && linuxHam <= macHam) {OS='Linux';}
+        else if(winHam <= linuxHam && winHam <= macHam) {OS='Windows';}
+        else if(macHam <= winHam && macHam <= linuxHam) {OS = 'macOS';}
+        else {OS = 'Unknown'}
+
         document.write(OS);
 
     </script>
-
 </body>
 </html>
