@@ -3,21 +3,23 @@
 <body>
     <h1>Hello World, this is my fingerprinting website </h1>
 
-    <iframe>
-        <script>
-            var cookie=true;
-            var OS="", mynav ="", myplat ="";
-
-            OS = navigator.appVersion;
-            mynav = navigator.platform;
-            myplat = navigator.platform;
-        </script>
-    </iframe>
-
     <script>
-        document.write(OS);
-        document.write(mynav)
-        document.write(myplat)
+        var OSPlat = navigator.platform;
+        var OS="Unknown"
+
+        if(OSPlat.indexOf('Mac') != -1) {
+            document.write('The operating system is macOS');
+        }
+        else if (OSPlat.indexOf('Win') != -1) {
+            document.write('The operating system is Windows');
+        }
+        else if (OSPlat.indexOf('Linux') != -1) {
+            document.write('The operating syste is Linux')
+        }
+        else {
+            document.write(OS)
+        }
+
     </script>
 
 </body>
