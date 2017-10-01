@@ -5,20 +5,22 @@
 
     <script>
         var OSPlat = navigator.platform;
-        var OS="Unknown"
+        var OS='Unknown';
 
         if(OSPlat.indexOf('Mac') != -1) {
-            document.write('The operating system is macOS');
+            OS='macOS';
         }
         else if (OSPlat.indexOf('Win') != -1) {
-            document.write('The operating system is Windows');
+            OS='Windows';
         }
         else if (OSPlat.indexOf('Linux') != -1) {
-            document.write('The operating syste is Linux')
+            OS='Linux';
         }
         else {
-            document.write(OS)
+            OS='Unknown';
         }
+
+        document.write(OS);
 
     </script>
 
