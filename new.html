@@ -1,0 +1,56 @@
+<html>
+<body>
+
+    <head>Hello World!</head>
+
+    <div id="PlugInsOS"> </div>
+
+    <script>
+
+
+        ////////////////////////////////////////////////////////
+        // Checking the platform of the browser               //
+        // Platform: which platform the browser is compiled   //
+        var OSPlat = navigator.platform; //platform the chrome was compiled in
+        var pLst;   //list for the installed plugins
+        var OS='Unknown'; // Originally the operating system is unknown
+        var container=document.getElementById('PlugInsOS'); //The place to write the output
+
+        //Returns the list of plugins installed
+        function pluginList() {
+            var counter=0;
+            var lst='';
+            while(counter < navigator.plugins.length) {
+                //container.innerHTML+= ('<br>' + navigator.plugins[counter].name);
+                lst+=navigator.plugins[counter].name;
+                counter++;
+            }
+            return lst;
+        }
+
+        //Updating the list of plugins
+        pLst = pluginList();
+
+        //Updating the operating system depending on the platform the browser was compiled in
+        if(OSPlat.indexOf('Mac') != -1) {
+            OS='macOS';
+        }
+        else if (OSPlat.indexOf('Win') != -1) {
+            OS='Windows';
+        }
+        else if (OSPlat.indexOf('Linux') != -1) {
+            OS='Linux';
+        }
+        else {
+            OS=OSPlat;
+        }
+
+        //chrome.management.getAll;
+        //container.innerHTML+= ('<br>' + chrome.management.getAll);
+        //container.innerHTML+= ('<br>' + Application.extensions.all);
+        container.innerHTML+= ('<br>' + pLst);
+        container.innerHTML+= ('<br>' + OS);
+
+    </script>
+</body>
+</html>
