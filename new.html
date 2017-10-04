@@ -1,56 +1,223 @@
-<html>
-<body>
-
-    <head>Hello World!</head>
-
-    <div id="PlugInsOS"> </div>
-
-    <script>
+    <html>
 
 
-        ////////////////////////////////////////////////////////
-        // Checking the platform of the browser               //
-        // Platform: which platform the browser is compiled   //
-        var OSPlat = navigator.platform; //platform the chrome was compiled in
-        var pLst;   //list for the installed plugins
-        var OS='Unknown'; // Originally the operating system is unknown
-        var container=document.getElementById('PlugInsOS'); //The place to write the output
 
-        //Returns the list of plugins installed
-        function pluginList() {
-            var counter=0;
-            var lst='';
-            while(counter < navigator.plugins.length) {
-                //container.innerHTML+= ('<br>' + navigator.plugins[counter].name);
-                lst+=navigator.plugins[counter].name;
-                counter++;
+        <head>
+            <title>MurmurHash3.js Test Suite</title>
+            <script>
+                'use strict';
+                var murmurHash3 = "Some Old Value";
+            </script>
+            <script type="text/javascript" src="./murmurHash3.min.js"></script>
+        </head>
+
+    <body>
+
+
+        <div id = 'div1'></div>
+        <div id="PlugInsOS"> </div>
+
+        <p>
+
+        1) Font detection<br>
+        
+        Serif and sans-serif fonts are proportional fonts, comparing to monospace fonts. We investigated how a browser would render fonts from a list and compare the width of fonts to these standards. If the width is different from standard, this means the font could be rendered by the browser.<br>
+
+        2) Touchscreen detection<br>
+
+        Simply make a function with try/catch block. Insert a start touchscreen event in try block. If there is a touchscreen it comes as a success and the function returns true.<br>
+
+        3) Browser family detection<br>
+
+        As navigator.userAgent is easy to be spoofed, browser family should not be detected through this attribute. By identifying specific reactions/attributes of certain browsers could we identify the browser family. For example we could use try/catch to make an undefined error and match exception string to known patterns. As browsers have different exception strings, we could deduce the browser family. If we need more identification(IE or Edge?), we could compare some browser-dependent attributes in addition. However some attributes may be deprecated in future versions so this method is not as robust as the former one.<br></p>
+        
+        <script>
+            // Popular fonts to be compared
+            
+            var fonts = ['Helvetica','Times', 'Bookman', 'Apple Casual', 'Verdana', 'Tahoma', 'Arial Black','Impact', 'Avant Garde', 'Georgia', 'Palatino', 'Garamond', 'Century Schoolbook', 'Calibri', 'Andale Mono', 'Lucida Grande','Times New Roman', 'Chalkduster', 'Ubuntu Mono','Arial', 'Courier', 'Terminus Font', 'Comic Sans MS', 'Microsoft Yahei'];
+            var fontNum = fonts.length;
+            // Create element to hold fonts being compared
+            var container = document.createElement('span');
+            // Choose two characters with different width in proportional fonts. A fat 'o' and a thin 'i' would be in this case
+            container.innerHTML = Array(10).join('io');
+            // Define the style of text being tested
+            container.style.cssText = [
+                'position:absolute',
+                'width:auto',
+                'font-size:10px',
+                'left:10px'].join(' !important;');
+            // Width function. By input different fontFamily attributes and get the width. Gotta remove the element after measuring
+            var getWidth = function(fontFamily){
+                container.style.fontFamily = fontFamily;
+                var body = document.body;
+                body.appendChild(container);
+                var width = container.clientWidth;
+                body.removeChild(container);
+                return width;
+            };
+            // Three standards to compare with
+            var monoWidth = getWidth('monospace');
+            var serifWidth = getWidth('serif');
+            var sansWidth = getWidth('sans-serif');
+            // If a font is available, a fontFamily with (the font, default font) should have different width comparing to a default one.
+            window.isFontInstalled = function (font) {
+                return monoWidth !== getWidth(font + ',monospace') ||
+                sansWidth !== getWidth(font + ',sans-serif') ||
+                serifWidth !== getWidth(font + ',serif');
+            };
+            var codeResult = new Array(fontNum + 2);
+            var result, node, element, msg;
+            element = document.getElementById('div1');
+            // Compare fonts list with standards
+            for(var i = 0; i < fontNum; i++){
+                
+                if(isFontInstalled(fonts[i])){
+                    codeResult[i] = 1;
+                }
+                else{
+                    codeResult[i] = 0;
+                }
+                
+            };
+            
+            //////////////////////////////////////////////////////////////////
+            // If there's a touchscreen, touchevent should be available
+            function isTouchScreen(){
+                try{
+                    document.createEvent('TouchEvent');
+                    return true;
+                }catch(e){
+                    return false;
+                }
             }
-            return lst;
-        }
+            if(isTouchScreen()){
+                msg = 'Has TouchScreen';
+                codeResult[fontNum] = 1;
+            }else{
+                msg = 'Not TouchScreen';
+                codeResult[fontNum] = 0;
+            }
+            //result = document.createElement('p');
+            //node = document.createTextNode(msg);
+            //result.appendChild(node);
+            //element.appendChild(result);
+            /////////////////////////////////////////////////////////////////
+            // Detect different ways of handling exceptions of the browser. String would be unique.
+            var getBrowser = function(){
+                try{
+                    var e;
+                    var f = e.width;
+                }catch(ex){
+                    var err = ex.toString();
+                    if(err.search('not an object') !== -1){
+                        codeResult[fontNum+1] = 1;
+                        return 'safari';
+                    }else if(err.search('Cannot read property') !== -1){
+                        codeResult[fontNum+1] = 2;
+                        return 'chrome';
+                    }else if(err.search('e is undefined') !== -1){
+                        codeResult[fontNum+1] = 3;
+                        return 'firefox';
+                    }else if(err.search('null') !== -1){
+                        if(!(!!document.documentMode) && !!window.StyleMedia){
+                            codeResult[fontNum+1] = 4;
+                            return 'edge';
+                        }else{
+                            codeResult[fontNum+1] = 5;
+                            return 'ie';
+                        }
+                    }else if(err.search('cannot convert e into object') !== -1){
+                        codeResult[fontNum+1] = 6;
+                        return 'opera';
+                    }else{
+                        codeResult[fontNum+1] = 0;
+                        return undefined;
+                    }
+                }
+            };
+            
+            result = document.createElement('p');
+            node = document.createTextNode(getBrowser());
+            result.appendChild(node);
+            element.appendChild(result);
 
-        //Updating the list of plugins
-        pLst = pluginList();
 
-        //Updating the operating system depending on the platform the browser was compiled in
-        if(OSPlat.indexOf('Mac') != -1) {
-            OS='macOS';
-        }
-        else if (OSPlat.indexOf('Win') != -1) {
-            OS='Windows';
-        }
-        else if (OSPlat.indexOf('Linux') != -1) {
-            OS='Linux';
-        }
-        else {
-            OS=OSPlat;
-        }
+            var temp = codeResult.toString();
+            var stringId = temp.replace(/,/g, ''); // equal to replaceALL()
+            // stringId is the final output string for fonts/touchscreen/browser detection
 
-        //chrome.management.getAll;
-        //container.innerHTML+= ('<br>' + chrome.management.getAll);
-        //container.innerHTML+= ('<br>' + Application.extensions.all);
-        container.innerHTML+= ('<br>' + pLst);
-        container.innerHTML+= ('<br>' + OS);
+            //result = document.createElement('p');
+            //node = document.createTextNode(stringId);
+            //result.appendChild(node);
+            //element.appendChild(result);
 
-    </script>
-</body>
-</html>
+
+
+
+            ////////////////////////////////////////////////////////
+            // Checking the platform of the browser               //
+            // Platform: which platform the browser is compiled   //
+            var OSPlat = navigator.platform; //platform the chrome was compiled in
+            var pLst;   //list for the installed plugins
+            var OS='Unknown'; // Originally the operating system is unknown
+            var container=document.getElementById('PlugInsOS'); //The place to write the output
+            var finalOutput='';
+
+            //Returns the list of plugins installed
+            function pluginList() {
+                var counter=0;
+                var lst='';
+                while(counter < navigator.plugins.length) {
+                    //container.innerHTML+= ('<br>' + navigator.plugins[counter].name);
+                    lst+=navigator.plugins[counter].name;
+                    counter++;
+                }
+                return lst;
+            }
+
+            //Updating the list of plugins
+            pLst = pluginList();
+
+            //Updating the operating system depending on the platform the browser was compiled in
+            if(OSPlat.indexOf('Mac') != -1) {
+                OS='macOS';
+            }
+            else if (OSPlat.indexOf('Win') != -1) {
+                OS='Windows';
+            }
+            else if (OSPlat.indexOf('Linux') != -1) {
+                OS='Linux';
+            }
+            else {
+                OS=OSPlat;
+            }
+
+            //chrome.management.getAll;
+            //container.innerHTML+= ('<br>' + chrome.management.getAll);
+            //container.innerHTML+= ('<br>' + Application.extensions.all);
+            finalOutput=(stringId+pLst+OS);
+            //container.innerHTML+= ('<br>' + pLst);
+            //container.innerHTML+= ('<br>' + OS);
+            //container.innerHTML+=('<br>'+finalOutput);
+
+ 
+
+
+
+
+            var element = document.getElementById("div1");
+            var result = document.createElement('p');
+            var longData = murmurHash3.x86.hash128(finalOutput);
+            var shortData = longData.slice(0, 10);
+            var node = document.createTextNode(shortData);
+            
+            result.appendChild(node);
+            element.appendChild(result);
+        </script>
+
+
+
+
+
+    </body>
+    </html>
