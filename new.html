@@ -46,7 +46,7 @@
         The list of plugins were found using navigator.plugins. <br><br>
 
 
-        6) Murmush Hash <br> 
+        6) Murmur Hash <br> 
         MurmurHash is a non-cryptographic hash function. Non-cryptographic versions are not specifically designed for cryptographic purposes and are not that difficult to reverse engineer but suitable for general purposes like creating a fingerprint.
         There are two versions of MurmurHash, MurmurHash2 and MurmurHash3. We are using the current version "MurmurHash3" which may produce a 32-bit or 128-bit output hash value. We have selected the 128-bit version which is equivalent to 32 hexadecimal characters. First 10 hexadecimal values are then used as a fingerprint. <br>
         The implementation of MurmurHash has been taken from a GitHub Project "MurmurHash3.js" [1]. <br>
@@ -144,24 +144,24 @@
                     var err = ex.toString();
                     if(err.search('not an object') !== -1){
                         codeResult[fontNum+1] = 1;
-                        return 'safari';
+                        return 'Safari';
                     }else if(err.search('Cannot read property') !== -1){
                         codeResult[fontNum+1] = 2;
-                        return 'chrome';
+                        return 'Chrome';
                     }else if(err.search('e is undefined') !== -1){
                         codeResult[fontNum+1] = 3;
-                        return 'firefox';
+                        return 'Firefox';
                     }else if(err.search('null') !== -1){
                         if(!(!!document.documentMode) && !!window.StyleMedia){
                             codeResult[fontNum+1] = 4;
-                            return 'edge';
+                            return 'Microsoft Edge';
                         }else{
                             codeResult[fontNum+1] = 5;
-                            return 'ie';
+                            return 'Microsoft Internet Explorer';
                         }
                     }else if(err.search('cannot convert e into object') !== -1){
                         codeResult[fontNum+1] = 6;
-                        return 'opera';
+                        return 'Opera';
                     }else{
                         codeResult[fontNum+1] = 0;
                         return undefined;
@@ -170,7 +170,7 @@
             };
             
             result = document.createElement('p');
-            node = document.createTextNode(getBrowser());
+            node = document.createTextNode('Browser family: ' + getBrowser());
             result.appendChild(node);
             element.appendChild(result);
 
