@@ -45,21 +45,20 @@
         5) Detection of plugins <br>
         The list of plugins were found using navigator.plugins. <br><br>
 
+        6) Browser ID calculation <br>
+        Concatenated browser family, operatins System, touchscreen , font, plugins to make a finalOutput string. <br>
+        Applied MurmurHash on finalOutput to get browser ID. <br><br>
 
-        6) Murmur Hash <br> 
+        7) MurmurHash <br> 
         MurmurHash is a non-cryptographic hash function. Non-cryptographic versions are not specifically designed for cryptographic purposes and are not that difficult to reverse engineer but suitable for general purposes like creating a fingerprint.
         There are two versions of MurmurHash, MurmurHash2 and MurmurHash3. We are using the current version "MurmurHash3" which may produce a 32-bit or 128-bit output hash value. We have selected the 128-bit version which is equivalent to 32 hexadecimal characters. First 10 hexadecimal values are then used as a fingerprint. <br>
         The implementation of MurmurHash has been taken from a GitHub Project "MurmurHash3.js" [1]. <br>
         Reference:
         [1] https://github.com/karanlyons/murmurHash3.js?files=1<br><br>
 
-        7) Browser ID calculation <br>
-        Concatenated browser family, pperatins System, touchscreen , font, plugins to make a finalOutput string. <br>
-        Applied murmur Has on finalOutput to get browser ID. <br><br>
-
         8) Methods taken into consideration <br>
         Screen resolution and screen depth were taken into consideration but excluded from the final result. <br>
-        If the user Connects a different monitor the browser Id would have changed. <br>
+        If the user Connects a different monitor, the browser Id would have changed. <br>
 
 
         </p>
